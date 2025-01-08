@@ -5,6 +5,7 @@ import {
 	handleContractVerification,
 	handleContractCancel,
 } from "./contract";
+import { handleTweetGeneration } from "./tweet";
 
 export const routes = [
 	{
@@ -36,5 +37,11 @@ export const routes = [
 		description:
 			"Call if the user made a contract in the last couple of hours and wants to cancel it.",
 		handler: handleContractCancel,
+	},
+	{
+		name: "create_new_tweet",
+		description:
+			"Only call if the message is the following: <SYSTEM> Generate a new tweet to post on your timeline </SYSTEM>",
+		handler: handleTweetGeneration,
 	},
 ];

@@ -16,31 +16,33 @@
  * }>>} Array of tweets in chronological order
  */
 async function buildConversationThread(tweet, client, maxReplies = 5) {
-    const thread = [];
-    const visited = new Set();
+	const thread = [];
+	const visited = new Set();
 
-    async function processThread(currentTweet, depth = 0) {
-        if (!currentTweet || depth >= maxReplies || visited.has(currentTweet.id)) {
-            return;
-        }
+	async function processThread(currentTweet, depth = 0) {
+		if (!currentTweet || depth >= maxReplies || visited.has(currentTweet.id)) {
+			return;
+		}
 
-        visited.add(currentTweet.id);
-        thread.unshift(currentTweet);
+		visited.add(currentTweet.id);
+		thread.unshift(currentTweet);
 
-        if (currentTweet.inReplyToStatusId) {
-            try {
-                const parentTweet = await client.getTweet(currentTweet.inReplyToStatusId);
-                if (parentTweet) {
-                    await processThread(parentTweet, depth + 1);
-                }
-            } catch (error) {
-                console.error('Error fetching parent tweet:', error);
-            }
-        }
-    }
+		if (currentTweet.inReplyToStatusId) {
+			try {
+				const parentTweet = await client.getTweet(
+					currentTweet.inReplyToStatusId
+				);
+				if (parentTweet) {
+					await processThread(parentTweet, depth + 1);
+				}
+			} catch (error) {
+				console.error("Error fetching parent tweet:", error);
+			}
+		}
+	}
 
-    await processThread(tweet);
-    return thread;
+	await processThread(tweet);
+	return thread;
 }
 
 /**
@@ -50,39 +52,39 @@ async function buildConversationThread(tweet, client, maxReplies = 5) {
  * @returns {string[]} Array of tweet-sized text chunks
  */
 function splitTweetContent(text, maxLength = 280) {
-    if (text.length <= maxLength) return [text];
+	if (text.length <= maxLength) return [text];
 
-    const tweets = [];
-    let currentTweet = '';
+	const tweets = [];
+	let currentTweet = "";
 
-    const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+	const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
 
-    for (const sentence of sentences) {
-        if ((currentTweet + sentence).length <= maxLength) {
-            currentTweet += sentence;
-        } else {
-            if (currentTweet) tweets.push(currentTweet.trim());
-            
-            if (sentence.length > maxLength) {
-                const words = sentence.split(' ');
-                currentTweet = words[0];
-                
-                for (let i = 1; i < words.length; i++) {
-                    if ((currentTweet + ' ' + words[i]).length <= maxLength) {
-                        currentTweet += ' ' + words[i];
-                    } else {
-                        tweets.push(currentTweet.trim());
-                        currentTweet = words[i];
-                    }
-                }
-            } else {
-                currentTweet = sentence;
-            }
-        }
-    }
+	for (const sentence of sentences) {
+		if ((currentTweet + sentence).length <= maxLength) {
+			currentTweet += sentence;
+		} else {
+			if (currentTweet) tweets.push(currentTweet.trim());
 
-    if (currentTweet) tweets.push(currentTweet.trim());
-    return tweets;
+			if (sentence.length > maxLength) {
+				const words = sentence.split(" ");
+				currentTweet = words[0];
+
+				for (let i = 1; i < words.length; i++) {
+					if ((currentTweet + " " + words[i]).length <= maxLength) {
+						currentTweet += " " + words[i];
+					} else {
+						tweets.push(currentTweet.trim());
+						currentTweet = words[i];
+					}
+				}
+			} else {
+				currentTweet = sentence;
+			}
+		}
+	}
+
+	if (currentTweet) tweets.push(currentTweet.trim());
+	return tweets;
 }
 
 /**
@@ -100,26 +102,26 @@ function splitTweetContent(text, maxLength = 280) {
  * }>>} Array of posted tweets
  */
 async function sendThreadedTweet(client, content, replyToId) {
-    const tweets = [];
-    const parts = splitTweetContent(content);
-    let lastTweetId = replyToId;
+	const tweets = [];
+	const parts = splitTweetContent(content);
+	let lastTweetId = replyToId;
 
-    for (const part of parts) {
-        const tweet = await client.sendTweet(part, lastTweetId);
-        if (tweet) {
-            tweets.push(tweet);
-            lastTweetId = tweet.id;
-        } else {
-            break;
-        }
-        await new Promise(resolve => setTimeout(resolve, 1000));
-    }
+	for (const part of parts) {
+		const tweet = await client.sendTweet(part, lastTweetId);
+		if (tweet) {
+			tweets.push(tweet);
+			lastTweetId = tweet.id;
+		} else {
+			break;
+		}
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+	}
 
-    return tweets;
+	return tweets;
 }
 
 module.exports = {
-    buildConversationThread,
-    splitTweetContent,
-    sendThreadedTweet
+	buildConversationThread,
+	splitTweetContent,
+	sendThreadedTweet,
 };

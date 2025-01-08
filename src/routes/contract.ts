@@ -52,7 +52,7 @@ export const handleContractCreate = async (
 
 	if (!validateSolanaAddress(analysis.returnAddress!)) {
 		await res.send(
-			"The provided Solana address appears to be invalid. Please check and provide a valid address."
+			"The provided Solana addres is invalid. Please check and provide a valid address."
 		);
 		return;
 	}
@@ -82,8 +82,13 @@ Contract ID: ${contract.id}
 Goal: ${contract.goal}
 Deadline: ${contract.deadline.toLocaleDateString()}
 Deposit Address: ${contract.depositAddress}
+Return Address: ${contract.returnAddress}
 
-To activate your contract, please send your SOL deposit to the address above. Once received, I'll help you stay accountable to your goal!`;
+Please make sure the return address is correct, thats where we will send your deposit back to after you complete your goal.
+
+To activate your contract, please send your SOL deposit to the address above. Once received, I'll help you stay accountable to your goal!
+
+`;
 
 	await createContractMemory(
 		req.input.userId,

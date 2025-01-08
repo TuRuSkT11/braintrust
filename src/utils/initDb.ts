@@ -7,16 +7,24 @@ const execAsync = promisify(exec);
 
 export async function initializeDatabase() {
 	try {
-		const dbPath = path.join(__dirname, "../../prisma/dev.db");
-		const migrationPath = path.join(__dirname, "../../prisma/migrations");
-		const dbExists = fs.existsSync(dbPath);
-		const migrationsExist = fs.existsSync(migrationPath);
+		const dbProvider = process.env.DATABASE_PROVIDER || "sqlite";
 
-		if (!migrationsExist) {
-			console.log("Creating initial migration...");
-			await execAsync("npx prisma migrate dev --name init");
-		} else if (!dbExists) {
-			console.log("Deploying existing migrations...");
+		if (dbProvider === "sqlite") {
+			const dbPath = path.join(__dirname, "../../prisma/dev.db");
+			const migrationPath = path.join(__dirname, "../../prisma/migrations");
+			const dbExists = fs.existsSync(dbPath);
+			const migrationsExist = fs.existsSync(migrationPath);
+
+			if (!migrationsExist) {
+				console.log("Creating initial migration...");
+				await execAsync("npx prisma migrate dev --name init");
+			} else if (!dbExists) {
+				console.log("Deploying existing migrations...");
+				await execAsync("npx prisma migrate deploy");
+			}
+		} else {
+			// For Postgres, always run migrations
+			console.log("Running database migrations...");
 			await execAsync("npx prisma migrate deploy");
 		}
 
@@ -29,7 +37,6 @@ export async function initializeDatabase() {
 		throw error;
 	}
 }
-
 // Run if called directly
 if (require.main === module) {
 	initializeDatabase().catch(console.error);

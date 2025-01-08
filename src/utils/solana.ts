@@ -50,7 +50,7 @@ export async function transferFunds(
 				"No funds to return from address:",
 				keypair.publicKey.toString()
 			);
-			return null;
+			return "No funds to return from address:" + keypair.publicKey.toString();
 		}
 
 		const transaction = new Transaction().add(
@@ -78,7 +78,7 @@ export async function transferFunds(
 
 		if (amountToSend <= 0) {
 			console.log("Balance too low to cover transaction fee");
-			return "No balance to return";
+			return "No funds to return from address:" + keypair.publicKey.toString();
 		}
 
 		transaction.instructions[0] = SystemProgram.transfer({

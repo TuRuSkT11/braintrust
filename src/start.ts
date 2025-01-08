@@ -9,23 +9,22 @@ import readline from "readline";
 import fetch from "node-fetch";
 import { stern as sternCharacter } from "./agent/character";
 import { routes } from "./routes";
-// Initialize Express and LLM utils
+
+// @ts-ignore
+import { TwitterClient } from "../clients/twitter";
+
 const app: Express = express();
 app.use(express.json());
 const llmUtils = new LLMUtils();
 
-// Initialize framework with middleware
 const framework = new AgentFramework();
 standardMiddleware.forEach((middleware) => framework.use(middleware));
 
-// Initialize agent
 const stern = new BaseAgent(sternCharacter);
 const agents = [stern];
 
-// Add routes
 routes.forEach((route: Route) => stern.addRoute(route));
 
-// Add API endpoint
 app.post("/agent/input", (req: Request, res: Response) => {
 	try {
 		const agentId = req.body.input.agentId;
@@ -52,7 +51,6 @@ app.post("/agent/input", (req: Request, res: Response) => {
 	}
 });
 
-// CLI Interface
 async function startCLI() {
 	const rl = readline.createInterface({
 		input: process.stdin,
@@ -93,6 +91,33 @@ async function startCLI() {
 	prompt();
 }
 
+async function startTwitterClient() {
+	const username = process.env.TWITTER_USERNAME || "";
+	const password = process.env.TWITTER_PASSWORD || "";
+	const email = process.env.TWITTER_EMAIL || "";
+	const twoFactorSecret = process.env.TWITTER_2FA_SECRET || "";
+	const postIntervalHours = process.env.TWITTER_POST_INTERVAL_HOURS
+		? parseInt(process.env.TWITTER_POST_INTERVAL_HOURS, 10)
+		: 4;
+	const pollingInterval = process.env.TWITTER_POLLING_INTERVAL
+		? parseInt(process.env.TWITTER_POLLING_INTERVAL, 10)
+		: 5;
+
+	const config = {
+		username,
+		password,
+		email,
+		twoFactorSecret: twoFactorSecret || undefined,
+		retryLimit: 3,
+		postIntervalHours,
+		enableActions: false,
+		pollingInterval,
+	};
+
+	const twitterClient = new TwitterClient(stern, config);
+	await twitterClient.start();
+}
+
 const PORT = process.env.PORT || 3000;
 let server: any;
 
@@ -100,6 +125,10 @@ async function start() {
 	server = app.listen(PORT, () => {
 		console.log(`Server running on http://localhost:${PORT}`);
 		startCLI();
+
+		startTwitterClient().catch((err) => {
+			console.error("Error starting Twitter client:", err);
+		});
 	});
 }
 
