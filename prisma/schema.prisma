@@ -28,8 +28,10 @@ model Contract {
   goal          String
   deadline      DateTime
   returnAddress String
+  depositAddress String   
+  privateKey    String    
   amount        Float?
-  status        String    @default("active")  // Keep as string for DB
+  status        String    @default("active")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   completedAt   DateTime?

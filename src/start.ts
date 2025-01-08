@@ -7,7 +7,8 @@ import { LLMUtils } from "./utils/llm";
 import { prisma } from "./utils/db";
 import readline from "readline";
 import fetch from "node-fetch";
-
+import { stern as sternCharacter } from "./agent/character";
+import { routes } from "./routes";
 // Initialize Express and LLM utils
 const app: Express = express();
 app.use(express.json());
@@ -17,67 +18,12 @@ const llmUtils = new LLMUtils();
 const framework = new AgentFramework();
 standardMiddleware.forEach((middleware) => framework.use(middleware));
 
-// Define Stern character
-const sternCharacter: Character = {
-	name: "Stern",
-	agentId: "stern",
-	system: `You are Stern, an AI mentor focused on providing direct, practical guidance.`,
-	bio: [
-		"Stern is a direct and efficient mentor with extensive experience in guiding others.",
-	],
-	lore: [
-		"Built expertise through years of practical experience and mentoring.",
-	],
-	messageExamples: [
-		[
-			{ user: "student1", content: { text: "How can I improve my skills?" } },
-			{
-				user: "Stern",
-				content: {
-					text: "Let's be specific. What skills are you currently working on?",
-				},
-			},
-		],
-	],
-	postExamples: ["Here's a structured approach to skill development..."],
-	topics: ["mentoring", "skill development", "growth"],
-	style: {
-		all: ["direct", "professional"],
-		chat: ["analytical"],
-		post: ["structured"],
-	},
-	adjectives: ["efficient", "practical"],
-	routes: [],
-};
-
 // Initialize agent
 const stern = new BaseAgent(sternCharacter);
 const agents = [stern];
 
-// Add conversation route
-stern.addRoute({
-	name: "conversation",
-	description: "Handle conversation",
-	handler: async (context: string, req, res) => {
-		const response = await llmUtils.getTextFromLLM(
-			context,
-			"anthropic/claude-3.5-sonnet"
-		);
-
-		await prisma.memory.create({
-			data: {
-				userId: req.input.userId,
-				agentId: stern.getAgentId(),
-				roomId: req.input.roomId,
-				type: "text",
-				generator: "llm",
-				content: JSON.stringify({ text: response }),
-			},
-		});
-
-		await res.send(response);
-	},
-});
+// Add routes
+routes.forEach((route: Route) => stern.addRoute(route));
 
 // Add API endpoint
 app.post("/agent/input", (req: Request, res: Response) => {

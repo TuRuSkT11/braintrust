@@ -61,6 +61,8 @@ export interface Contract {
 	goal: string;
 	deadline: Date;
 	returnAddress: string;
+	depositAddress: string;
+	privateKey: string;
 	amount: number | null | undefined;
 	status: string;
 	createdAt: Date;
@@ -99,6 +101,7 @@ export interface Memory {
 	agentId: string;
 	roomId: string;
 	content: any;
+	generator: string; // llm, external
 	type: string;
 	createdAt: Date;
 }
@@ -111,7 +114,7 @@ export type AgentMiddleware = (
 
 export interface Agent {
 	getAgentContext(): string;
-	getRoutes(): Map<string, Route>;
+	getRoutes(): Route[];
 	getSystemPrompt(): string;
 	addRoute(route: Route): void;
 	getAgentId(): string;

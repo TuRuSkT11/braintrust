@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import { webcrypto } from "node:crypto";
 const crypto = webcrypto as unknown as Crypto;
 

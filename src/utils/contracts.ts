@@ -6,7 +6,9 @@ export class ContractUtils {
 		userId: string,
 		goal: string,
 		deadline: Date,
-		returnAddress: string
+		returnAddress: string,
+		depositAddress: string,
+		privateKey: string
 	): Promise<Contract> {
 		return await prisma.contract.create({
 			data: {
@@ -14,6 +16,9 @@ export class ContractUtils {
 				goal,
 				deadline,
 				returnAddress,
+				depositAddress,
+				privateKey,
+
 				status: "active",
 			},
 		});
