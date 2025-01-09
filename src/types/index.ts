@@ -24,7 +24,7 @@ export interface InputObject {
 	roomId: string;
 	type: InputType;
 	text?: string;
-	imageUrl?: string;
+	imageUrls?: string[];
 	audioUrl?: string;
 	videoUrl?: string;
 	[key: string]: any;

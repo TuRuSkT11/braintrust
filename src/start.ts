@@ -40,8 +40,10 @@ app.post("/agent/input", (req: Request, res: Response) => {
 			userId: bodyInput.userId,
 			agentId: stern.getAgentId(),
 			roomId: `${agentId}_${bodyInput.userId}`,
-			type: InputType.TEXT,
+			type:
+				bodyInput.type === "text" ? InputType.TEXT : InputType.TEXT_AND_IMAGE,
 			text: bodyInput.text,
+			imageUrls: bodyInput.imageUrls,
 		};
 
 		framework.process(input, stern, res);

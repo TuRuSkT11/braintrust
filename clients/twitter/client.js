@@ -20,7 +20,6 @@ class TwitterClient extends TwitterBase {
 				`Posting loop started. Will post every ${this.config.postIntervalHours} hours`
 			);
 		}
-		console.log("Polling Interval: ", this.config.pollingInterval);
 
 		this.checkInterval = setInterval(
 			() => this.checkInteractions(),
@@ -68,6 +67,7 @@ class TwitterClient extends TwitterBase {
 						username: this.config.username,
 						conversationId: tweet.conversationId,
 						permanentUrl: tweet.permanentUrl,
+						imageUrls: tweet.imageUrls,
 					});
 				}
 			}
@@ -83,6 +83,9 @@ class TwitterClient extends TwitterBase {
 		try {
 			const mentions = await this.getMentions();
 			for (const mention of mentions) {
+				if (this.lastCheckedTweetId && mention.id <= this.lastCheckedTweetId) {
+					continue;
+				}
 				await this.handleMention(mention);
 				this.lastCheckedTweetId = mention.id;
 			}
@@ -101,13 +104,17 @@ class TwitterClient extends TwitterBase {
 				conversationId: tweet.conversationId,
 				inReplyToId: tweet.inReplyToStatusId,
 				permanentUrl: tweet.permanentUrl,
+				imageUrls: tweet.imageUrls,
 			});
 
 			if (!tweetStored) {
 				console.log("Tweet already processed, skipping:", tweet.id);
 				return [];
 			}
-			console.log("Handling mention:", `@${tweet.username} ${tweet.text}`);
+			console.log(
+				"Handling mention:",
+				`@${tweet.username} ${tweet.text} IMAGES: ${tweet.imageUrls?.join(" ")}`
+			);
 
 			const roomId = tweet.conversationId || "twitter";
 			const promptText = `@${tweet.username}:\n${tweet.text}`;
@@ -117,6 +124,8 @@ class TwitterClient extends TwitterBase {
 				userId: `tw_user_${tweet.userId}`,
 				roomId,
 				text: promptText,
+				imageUrls: tweet.imageUrls,
+				type: tweet.imageUrls ? "text_and_image" : "text",
 			});
 
 			const tweets = await sendThreadedTweet(this, responseText, tweet.id);
@@ -135,6 +144,7 @@ class TwitterClient extends TwitterBase {
 						conversationId: tweet.conversationId,
 						inReplyToId: tweet.id,
 						permanentUrl: replyTweet.permanentUrl,
+						imageUrls: replyTweet.imageUrls,
 					});
 				}
 			}
@@ -154,6 +164,8 @@ class TwitterClient extends TwitterBase {
 				userId: payload.userId,
 				roomId: payload.roomId,
 				text: payload.text,
+				type: payload.type,
+				imageUrls: payload.imageUrls,
 			},
 		};
 
@@ -174,34 +186,6 @@ class TwitterClient extends TwitterBase {
 		} catch (error) {
 			throw new Error(`Failed to fetch tweet content: ${error.message}`);
 		}
-	}
-
-	async replyToTweet(tweetId, content) {
-		try {
-			const tweet = await this.getTweet(tweetId);
-			if (!tweet) {
-				throw new Error("Tweet not found");
-			}
-			const replyContent = content || (await this.generateReplyToTweet(tweet));
-			return await sendThreadedTweet(this, replyContent, tweetId);
-		} catch (error) {
-			console.error("Error replying to tweet:", error);
-			return [];
-		}
-	}
-
-	async generateReplyToTweet(tweet) {
-		const thread = await buildConversationThread(tweet, this);
-		const prompt = `Generate a reply to this tweet:
-        
-Tweet from @${tweet.username}: ${tweet.text}
-
-Context:
-${thread.map((t) => `@${t.username}: ${t.text}`).join("\n")}
-
-Write only your reply (max 280 characters):`;
-
-		return this.agent.generateResponse(prompt);
 	}
 
 	async like(tweetId) {
