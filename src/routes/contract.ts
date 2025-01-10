@@ -27,9 +27,9 @@ export const handleContractCreate = async (
 
 	const analysis = await llmUtils.getObjectFromLLM(
 		`${context}\n\n
-        <SYSTEM> The user is trying to create an accountability contract. They have provided a goal, deadline, and solana return address. Extract them. If they do not seem to want to create a contract, return true for the abort field. </SYSTEM>`,
+        <SYSTEM> The user is trying to create an accountability contract. They have provided a goal, deadline, and solana return address. Extract them. If they do not seem to want to create a contract, return true for the abort field. For the deadline make sure you extract the date they specify for the completion of the goal, and not the time the messages were sent. Also if they say something like "in 48 hours" use the timestamp of the message to determine the deadline. </SYSTEM>`,
 		contractCreateSchema,
-		LLMSize.SMALL
+		LLMSize.LARGE
 	);
 
 	if (analysis.abort) {
