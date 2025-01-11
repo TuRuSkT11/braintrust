@@ -100,7 +100,6 @@ class TwitterBase extends EventEmitter {
 					console.log("Already logged in");
 					break;
 				}
-				console.log(this.config);
 
 				await this.twitterClient.login(
 					this.config.username,
@@ -114,6 +113,7 @@ class TwitterBase extends EventEmitter {
 					break;
 				}
 			} catch (error) {
+				console.log(error);
 				console.error(`Login attempt failed: ${error.message}`);
 			}
 
