@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express, Request, response, Response } from "express";
 import { AgentFramework } from "./framework";
 import { standardMiddleware } from "./middleware";
 import { Character, InputObject, InputSource, InputType, Route } from "./types";
@@ -6,7 +6,7 @@ import { BaseAgent } from "./agent";
 import { LLMUtils } from "./utils/llm";
 import { prisma } from "./utils/db";
 import readline from "readline";
-import fetch from "node-fetch";
+import axios from "axios";
 import { stern as sternCharacter } from "./agent/character";
 import { routes } from "./routes";
 
@@ -66,21 +66,15 @@ async function startCLI() {
 	async function prompt() {
 		rl.question("\nYou: ", async (text) => {
 			try {
-				const response = await fetch("http://localhost:3000/agent/input", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
+				const response = await axios.post("http://localhost:3000/agent/input", {
+					input: {
+						agentId: "stern",
+						userId: "cli_user",
+						text: text,
 					},
-					body: JSON.stringify({
-						input: {
-							agentId: "stern",
-							userId: "cli_user",
-							text: text,
-						},
-					}),
 				});
 
-				const data = await response.json();
+				const data = response.data;
 				console.log("\nStern:", data);
 				prompt();
 			} catch (error) {
