@@ -104,6 +104,7 @@ async function startTwitterClient() {
 	const pollingInterval = process.env.TWITTER_POLLING_INTERVAL
 		? parseInt(process.env.TWITTER_POLLING_INTERVAL, 10)
 		: 5;
+	const dryRun = process.env.TWITTER_DRY_RUN === "true";
 
 	const config = {
 		username,
@@ -114,6 +115,7 @@ async function startTwitterClient() {
 		postIntervalHours,
 		enableActions: false,
 		pollingInterval,
+		dryRun,
 	};
 
 	const twitterClient = new TwitterClient(stern, config);
