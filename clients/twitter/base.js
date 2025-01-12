@@ -83,6 +83,7 @@ class TwitterBase extends EventEmitter {
 		this.twitterClient = new Scraper();
 		this.requestQueue = new RequestQueue();
 		this.lastCheckedTweetId = null;
+		this.cookies = null;
 	}
 
 	/**
@@ -100,7 +101,7 @@ class TwitterBase extends EventEmitter {
 					console.log("Already logged in");
 					break;
 				}
-
+				this.cookies && (await this.twitterClient.setCookies(this.cookies));
 				await this.twitterClient.login(
 					this.config.username,
 					this.config.password,
@@ -125,6 +126,9 @@ class TwitterBase extends EventEmitter {
 		if (retries === 0) {
 			throw new Error("Failed to login after maximum retries");
 		}
+		this.cookies = await this.twitterClient.getCookies();
+		await this.twitterClient.setCookies(this.cookies);
+		// console.log("Cookies: ", this.cookies);
 	}
 
 	/**

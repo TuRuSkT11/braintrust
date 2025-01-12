@@ -127,7 +127,7 @@ class TwitterClient extends TwitterBase {
 				roomId,
 				text: promptText,
 				imageUrls: tweet.imageUrls,
-				type: tweet.imageUrls.length ? "text_and_image" : "text",
+				type: tweet.imageUrls?.length ? "text_and_image" : "text",
 			});
 			console.log(responseText);
 			if (this.dryRun) return;
