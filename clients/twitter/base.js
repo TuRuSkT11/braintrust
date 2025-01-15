@@ -77,6 +77,7 @@ class TwitterBase extends EventEmitter {
 	 * @param {Object} config - Twitter configuration
 	 */
 	constructor(agent, config) {
+		console.log(config);
 		super();
 		this.agent = agent;
 		this.config = config;

@@ -82,6 +82,7 @@ class TwitterClient extends TwitterBase {
 	}
 
 	async checkInteractions() {
+		console.log("Checking for mentions...");
 		try {
 			const mentions = await this.getMentions();
 			for (const mention of mentions) {
