@@ -12,6 +12,7 @@ import { routes } from "./routes";
 
 // @ts-ignore
 import { TwitterClient } from "../clients/twitter";
+const PORT = process.env.SERVER_PORT;
 
 const app: Express = express();
 app.use(express.json());
@@ -66,13 +67,17 @@ async function startCLI() {
 	async function prompt() {
 		rl.question("\nYou: ", async (text) => {
 			try {
-				const response = await axios.post("http://localhost:3000/agent/input", {
-					input: {
-						agentId: "stern",
-						userId: "cli_user",
-						text: text,
-					},
-				});
+				const response = await axios.post(
+					`http://localhost:${PORT}/agent/input`,
+					{
+						input: {
+							agentId: "stern",
+							userId: "cli_user3",
+							text: text,
+							type: "text",
+						},
+					}
+				);
 
 				const data = response.data;
 				console.log("\nStern:", data);
@@ -116,7 +121,6 @@ async function startTwitterClient() {
 	await twitterClient.start();
 }
 
-const PORT = process.env.PORT || 3000;
 let server: any;
 
 async function start() {
