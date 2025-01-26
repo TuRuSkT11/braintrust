@@ -6,14 +6,14 @@
 </div>
 
 <br></br>
-Stern is an AI accountability partner that helps you become the version of yourself you want to be. By combining philosophical mentorship with Solana smart contracts, Stern ensures you follow through on your goals by putting real stakes on your commitments.
+Stern is an AI accountability partner designed to help you become the version of yourself you aspire to be. Through a combination of philosophical mentorship and Solana smart contracts, Stern ensures you follow through on your commitments by putting real stakes on your goals.
 
 ## Core Features
 
-- **Smart Contract Accountability**: Back your goals with SOL tokens
-- **AI Philosophical Guidance**: Get mentorship inspired by Stoic wisdom
-- **Progress Tracking**: Regular check-ins and milestone verification
-- **Automated Payouts**: Get your stake back upon goal completion
+- **Smart Contract Accountability**: Back your commitments with SOL tokens
+- **AI Philosophical Guidance**: Receive mentorship inspired by Stoic wisdom
+- **Progress Tracking**: Benefit from regular check-ins and milestone verification
+- **Automated Payouts**: Receive your stake back upon successful goal completion
 
 ## Get Started with Stern
 
@@ -75,7 +75,7 @@ MIT License - See [LICENSE](LICENSE) for details
 
 ---
 
-_"The impediment to action advances action. What stands in the way becomes the way." - Marcus Aurelius_
+_"The obstacle to action advances action. What stands in the way becomes the way." - Marcus Aurelius_
 
 For questions or issues, please check our [existing issues](https://github.com/yourusername/stern/issues) or open a new one.
 
