@@ -1,9 +1,14 @@
+// Core dependencies
 import OpenAI from "openai";
 import axios from "axios";
 import { z } from "zod";
+
+// OpenAI specific imports
 import { zodResponseFormat } from "openai/helpers/zod";
-import { LLMSize } from "../types";
 import { ChatCompletionContentPartImage } from "openai/resources/chat/completions";
+
+// Local imports
+import { LLMSize } from "../types";
 
 interface OpenRouterResponse {
 	choices: Array<{
@@ -18,7 +23,10 @@ const booleanSchema = z.object({
 	explanation: z.string(),
 });
 
-// Why JSON responses only from OpenAI? Because the other SDKs are unreliable.
+/**
+ * We use JSON responses only from OpenAI because the other SDKs are unreliable.
+ * This approach ensures consistent parsing and error handling.
+ */
 export class LLMUtils {
 	private openai: OpenAI;
 	private openrouterApiKey: string;
@@ -92,6 +100,13 @@ export class LLMUtils {
 		return JSON.parse(response.choices[0].message.content);
 	}
 
+	/**
+	 * Gets a text response from the LLM using OpenRouter API.
+	 *
+	 * @param prompt The user prompt string
+	 * @param model The model identifier to use
+	 * @returns A Promise resolving to the generated text
+	 */
 	async getTextFromLLM(prompt: string, model: string): Promise<string> {
 		const response = await axios.post(
 			"https://openrouter.ai/api/v1/chat/completions",
@@ -496,16 +511,24 @@ async function fetchImageAsBase64(url: string): Promise<Base64Image | null> {
 	}
 }
 
+/**
+ * Converts an array of image URLs to base64 encoded strings
+ *
+ * @param imageUrls Array of image URLs to convert
+ * @returns Promise resolving to array of base64 encoded images with content types
+ */
 async function convertUrlsToBase64(
 	imageUrls: string[]
 ): Promise<Base64Image[]> {
 	const base64Images: Base64Image[] = [];
+
 	for (const url of imageUrls) {
 		const result = await fetchImageAsBase64(url);
 		if (result) {
 			base64Images.push(result);
 		}
 	}
+
 	return base64Images;
 }
 
