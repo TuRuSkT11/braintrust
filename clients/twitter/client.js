@@ -1,11 +1,24 @@
-const { TwitterBase } = require("./base");
-const { buildConversationThread, sendThreadedTweet } = require("./utils");
+// Core dependencies
 const axios = require("axios");
-const { storeTweetIfNotExists } = require("../../dist/utils/memory");
 require("dotenv").config();
 
+// Local imports
+const { TwitterBase } = require("./base");
+const { buildConversationThread, sendThreadedTweet } = require("./utils");
+const { storeTweetIfNotExists } = require("../../dist/utils/memory");
+
+// Configuration
 const PORT = process.env.SERVER_PORT;
+/**
+ * Twitter client implementation that handles posting tweets and responding to mentions
+ */
 class TwitterClient extends TwitterBase {
+	/**
+	 * Initialize a new Twitter client
+	 *
+	 * @param {Object} agent - The agent that will generate content
+	 * @param {Object} config - Configuration options
+	 */
 	constructor(agent, config) {
 		super(agent, config);
 		this.postInterval = null;
@@ -43,6 +56,11 @@ class TwitterClient extends TwitterBase {
 		console.log("Twitter client stopped");
 	}
 
+	/**
+	 * Generates and posts a new tweet
+	 *
+	 * @returns {Array} Array of posted tweets
+	 */
 	async generateAndPost() {
 		try {
 			console.log("Requesting new tweet content from the server...");
@@ -83,6 +101,9 @@ class TwitterClient extends TwitterBase {
 		}
 	}
 
+	/**
+	 * Checks for new mentions and interactions
+	 */
 	async checkInteractions() {
 		console.log("Checking for mentions...");
 		try {
@@ -99,6 +120,12 @@ class TwitterClient extends TwitterBase {
 		}
 	}
 
+	/**
+	 * Handles a mention by generating and posting a reply
+	 *
+	 * @param {Object} tweet - The mention tweet to respond to
+	 * @returns {Array} Array of reply tweets
+	 */
 	async handleMention(tweet) {
 		try {
 			const tweetStored = await storeTweetIfNotExists({
@@ -163,6 +190,12 @@ class TwitterClient extends TwitterBase {
 		}
 	}
 
+	/**
+	 * Fetches tweet content from the agent server
+	 *
+	 * @param {Object} payload - Request payload with user and message info
+	 * @returns {String} Generated tweet content
+	 */
 	async fetchTweetContent(payload) {
 		const url = `http://localhost:${PORT}/agent/input`;
 		const body = {
