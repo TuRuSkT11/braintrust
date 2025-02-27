@@ -1,6 +1,6 @@
 {
-	"name": "liz",
-	"version": "1.0.0",
+	"name": "stern",
+	"version": "1.0.1",
 	"description": "Express-style agent framework for processing agent interactions through middleware chains",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -16,7 +16,10 @@
 		"db:reset": "rm -f prisma/dev.db && npm run db:init",
 		"prisma:generate": "prisma generate",
 		"prisma:migrate": "prisma migrate dev",
-		"prisma:studio": "prisma studio"
+		"prisma:studio": "prisma studio",
+		"lint": "eslint . --ext .ts",
+		"format": "prettier --write \"src/**/*.ts\"",
+		"deploy:prod": "npm run build && pm2 restart stern"
 	},
 	"keywords": [
 		"agent",
@@ -28,19 +31,21 @@
 	"author": "",
 	"license": "MIT",
 	"dependencies": {
-		"@prisma/client": "^5.7.0",
-		"axios": "^1.7.9",
+		"@prisma/client": "^5.7.1",
 		"@solana/web3.js": "^1.98.0",
+		"axios": "^1.7.9",
 		"express": "^4.21.2",
 		"node-fetch": "^3.3.2",
-		"openai": "^4.0.0",
+		"openai": "^4.2.0",
 		"zod": "^3.22.4"
 	},
 	"devDependencies": {
 		"@types/express": "^4.0.0",
 		"@types/node": "^20.10.4",
-		"prisma": "^5.7.0",
+		"prisma": "^5.7.1",
 		"ts-node": "^10.9.2",
-		"typescript": "^5.3.3"
+		"typescript": "^5.3.3",
+		"eslint": "^8.56.0",
+		"prettier": "^3.1.1"
 	}
 }
