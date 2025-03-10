@@ -1,24 +1,34 @@
-import { AgentMiddleware, Route } from "../types";
-import { LLMUtils } from "../utils/llm";
+// External dependencies
 import { z } from "zod";
-import { LLMSize } from "../types";
 
+// Internal imports
+import { AgentMiddleware, Route, LLMSize } from "../types";
+import { LLMUtils } from "../utils/llm";
+
+/**
+ * Schema for validating route selection responses from the LLM
+ */
 const routeSchema = z.object({
 	selectedRoute: z.string(),
-	confidence: z.number(),
+	confidence: z.number().min(0).max(1),
 	reasoning: z.string(),
 });
 
+/**
+ * Middleware that routes incoming requests to the appropriate handler
+ * based on the content of the request and available routes
+ */
 export const router: AgentMiddleware = async (req, res, next) => {
 	try {
 		const llmUtils = new LLMUtils();
 		const routes = req.agent.getRoutes();
 
-		// Create route descriptions for LLM
+		// Format route descriptions for the LLM prompt
 		const routeDescriptions = routes
 			.map((route: Route) => `"${route.name}": ${route.description}`)
 			.join("\n");
 
+		// Construct the prompt for route selection
 		const prompt = `
 <CONTEXT>
 ${req.context}
@@ -43,7 +53,8 @@ Respond with a JSON object containing:
 </SYSTEM>
 `.trim();
 
-		// console.log(prompt.slice(-2000));
+		// For debugging: uncomment to see the last part of the prompt
+		// console.log("Router prompt (last 2000 chars):", prompt.slice(-2000));
 
 		const routeDecision = await llmUtils.getObjectFromLLM(
 			prompt,
@@ -51,34 +62,38 @@ Respond with a JSON object containing:
 			LLMSize.LARGE
 		);
 
+		// Find the handler for the selected route
 		const handler = routes.find((r) => r.name === routeDecision.selectedRoute);
 		if (!handler) {
 			return res.error(
-				new Error(`No handler for route: ${routeDecision.selectedRoute}`)
+				new Error(`No handler found for route: ${routeDecision.selectedRoute}`)
 			);
 		}
-		console.log("ROUTE DECISION", routeDecision.selectedRoute);
+		
+		console.log(`ROUTE DECISION: ${routeDecision.selectedRoute}`);
 
+		// Log a warning if the confidence is low
 		if (routeDecision.confidence < 0.7) {
 			console.warn(
-				`Low confidence (${routeDecision.confidence}) for route: ${routeDecision.selectedRoute}`
+				`Low confidence routing decision (${routeDecision.confidence.toFixed(2)}) for route: ${routeDecision.selectedRoute}`
 			);
 			console.warn(`Reasoning: ${routeDecision.reasoning}`);
 		}
 
+		// Execute the selected route handler
 		try {
 			await handler.handler(req.context || "", req, res);
 			await next();
 		} catch (error) {
+			const errorMessage = error instanceof Error ? error.message : String(error);
 			await res.error(
 				new Error(
-					`Route handler error (${routeDecision.selectedRoute}): ${
-						(error as Error).message
-					}`
+					`Route handler error (${routeDecision.selectedRoute}): ${errorMessage}`
 				)
 			);
 		}
 	} catch (error) {
-		await res.error(new Error(`Router error: ${(error as Error).message}`));
+		const errorMessage = error instanceof Error ? error.message : String(error);
+		await res.error(new Error(`Router error: ${errorMessage}`));
 	}
 };
