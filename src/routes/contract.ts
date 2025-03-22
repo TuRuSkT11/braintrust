@@ -11,18 +11,33 @@ import {
 import { encryptKey, decryptKey } from "../utils/crypto";
 import { createContractMemory } from "../utils/memory";
 
+/**
+ * Shared LLM utility instance for all contract-related operations
+ */
 const llmUtils = new LLMUtils();
 
+/**
+ * Handles the creation of a new accountability contract
+ * 
+ * This function processes user requests to create a contract, extracts the necessary
+ * information (goal, deadline, return address), validates the inputs, and creates
+ * a new contract with a deposit address for the user.
+ * 
+ * @param context - The conversation context
+ * @param req - The agent request object
+ * @param res - The agent response object
+ */
 export const handleContractCreate = async (
 	context: string,
 	req: AgentRequest,
 	res: AgentResponse
 ) => {
+	// Schema for extracting contract details from user input
 	const contractCreateSchema = z.object({
 		goal: z.string().optional(),
 		deadline: z.string().optional(),
 		returnAddress: z.string().optional(),
-		abort: z.boolean().optional(),
+		abort: z.boolean().optional(), // Flag to abort if user isn't trying to create a contract
 	});
 
 	const analysis = await llmUtils.getObjectFromLLM(
@@ -62,11 +77,11 @@ export const handleContractCreate = async (
 		return await res.send("The deadline must be in the future.");
 	}
 
-	// Generate keypair for deposits
+	// Generate a new Solana keypair for this contract's deposit address
 	const { publicKey, privateKey } = await generateKeypair();
 	const encryptedPrivateKey = await encryptKey(privateKey);
 
-	// Create the contract with the keypair
+	// Create the contract record with the generated keypair
 	const contract = await ContractUtils.createContract(
 		req.input.userId,
 		analysis.goal!,
@@ -99,6 +114,14 @@ To activate your contract, please send your SOL deposit to the address above. On
 	await res.send(message);
 };
 
+/**
+ * Provides guidance to users who are attempting to create a contract
+ * but haven't provided all the necessary information
+ * 
+ * @param context - The conversation context
+ * @param req - The agent request object
+ * @param res - The agent response object
+ */
 export const handleContractFormationHelp = async (
 	context: string,
 	req: AgentRequest,
@@ -119,6 +142,16 @@ export const handleContractFormationHelp = async (
 	await res.send(response);
 };
 
+/**
+ * Handles verification of contract completion
+ * 
+ * This function processes user claims of contract completion, validates the proof,
+ * and if successful, returns the deposited funds to the user's return address.
+ * 
+ * @param context - The conversation context
+ * @param req - The agent request object
+ * @param res - The agent response object
+ */
 export const handleContractVerification = async (
 	context: string,
 	req: AgentRequest,
@@ -163,7 +196,7 @@ export const handleContractVerification = async (
 		);
 	}
 
-	// Decrypt private key and transfer funds back
+	// Decrypt the private key and transfer the deposited funds back to the user
 	const privateKey = await decryptKey(contract.privateKey);
 	const txSignature = await transferFunds(privateKey, contract.returnAddress);
 
@@ -191,6 +224,16 @@ Keep up the great work!`;
 	await res.send(message);
 };
 
+/**
+ * Handles contract cancellation requests
+ * 
+ * This function allows users to cancel a contract within 2 hours of creation
+ * and returns their deposited funds.
+ * 
+ * @param context - The conversation context
+ * @param req - The agent request object
+ * @param res - The agent response object
+ */
 export const handleContractCancel = async (
 	context: string,
 	req: AgentRequest,
@@ -223,13 +266,14 @@ export const handleContractCancel = async (
 		);
 	}
 
+	// Only allow cancellation within 2 hours of contract creation
 	if (contract.createdAt < new Date(Date.now() - 2 * 60 * 60 * 1000)) {
 		return await res.send(
 			"You can only cancel a contract within 2 hours of creating it."
 		);
 	}
 
-	// Decrypt private key and transfer funds back
+	// Decrypt the private key and return the deposited funds to the user
 	const privateKey = await decryptKey(contract.privateKey);
 	const txSignature = await transferFunds(privateKey, contract.returnAddress);
 
