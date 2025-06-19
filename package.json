@@ -1,7 +1,7 @@
 {
-	"name": "stern",
+	"name": "braintrust",
 	"version": "1.0.1",
-	"description": "Express-style agent framework for processing agent interactions through middleware chains",
+	"description": "A decentralized AI memory vault on Solana for minting, trading, and archiving Thought Capsules — encrypted, timestamped bundles of AI-generated insight.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {

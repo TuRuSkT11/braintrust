@@ -1,61 +1,83 @@
-# Agent Stern
+# 🧠 Braintrust
 
 <div align="center">
-  <img src="assets/pfp.png" alt="Agent Stern" width="500" height="500" />
-  <p><em>Developed by <a href="https://akrasia.ai/stern">Akrasia Labs</a></em></p>
+  <img src="assets/logo.png" alt="Braintrust Logo" width="400" />
+  <p><em>The first decentralized AI memory vault on Solana</em></p>
 </div>
 
-<br></br>
-Stern is an AI accountability partner designed to help you become the version of yourself you aspire to be. Through a combination of philosophical mentorship and Solana smart contracts, Stern ensures you follow through on your commitments by putting real stakes on your goals.
+---
 
-## Core Features
+## Turn AI Thoughts Into Digital Assets
+Mint, trade, and archive ideas — before the world catches up.
 
-- **Smart Contract Accountability**: Back your commitments with SOL tokens
-- **AI Philosophical Guidance**: Receive mentorship inspired by Stoic wisdom
-- **Progress Tracking**: Benefit from regular check-ins and milestone verification
-- **Automated Payouts**: Receive your stake back upon successful goal completion
+---
 
-## Get Started with Stern
+## 🔥 What is Braintrust?
 
-Creating a commitment contract with Stern is simple:
+**Braintrust** lets you create and own **Thought Capsules** — encrypted, timestamped bundles of AI-generated insights, strategies, or predictions.
+Each capsule is stored **on-chain** and can be traded like intellectual NFTs.
 
-1. **Connect on Twitter**
+> Great ideas shouldn’t vanish. Now they become verifiable assets.
 
-   - Follow [@sternseesyou](https://twitter.com/sternseesyou)
-   - Tag Stern in a tweet describing your goal
-   - Example: "@sternseesyou I want to write 50,000 words in 30 days"
+---
 
-2. **Form Your Contract**
-   - Stern will help refine your goal
-   - Set your stake amount in SOL
-   - Establish clear success criteria
-   - Define your deadline
+## 💡 Why Thought Capsules?
 
-_Discord and Telegram support coming soon!_
+In a world of infinite content, **original thinking matters**.
+With Braintrust, you can:
 
-## How It Works
+- 🔐 Save your AI-generated ideas securely
+- 🕓 Prove you had that insight first (on-chain timestamp)
+- 🧠 Monetize knowledge as tradable digital assets
 
-1. **Tell Stern Your Goal**
+From trading strategies to story prompts, lore drops, or even long-term predictions — capsules let you **own your thoughts**.
 
-   - Share what you want to achieve
-   - Get guidance on making it concrete and achievable
+---
 
-2. **Back Your Words with Action**
+## 🚀 Use Cases
 
-   - Set a return address where Stern will return your SOL after you complete your goal
-   - Create the contract and get the deposit address from Stern
-   - Deposit the amount you want to stake
+### 👩‍🔬 AI Researchers
+Archive models, predictions, and outcomes.
+Backtest your theory — or sell it.
 
-3. **Get Real Support**
+### 📈 Data Traders
+Mint trading strategies from your AI models.
+Lock insights before the market moves.
 
-   - Regular check-ins with Stern
-   - Deep conversations about your progress
-   - Philosophical guidance when you're stuck
+### ✍️ Writers & Worldbuilders
+Tokenize AI-powered prompt chains or lore.
+Sell creative blueprints, not just the result.
 
-4. **Complete Your Goal**
-   - Show you've done what you promised
-   - Get your deposit back after you show Stern proof you accomplished your objective
-   - Be one step closer to becoming the person you want to be
+### 🏛️ DAOs & Collectives
+Curate community insights into a living, traceable knowledge vault.
+
+---
+
+## 🛡️ Key Features
+
+✅ On-chain verification (Solana)
+✅ Encrypted, timestamped content
+✅ Transferable + tradable as NFTs
+✅ Plug-and-play for AI workflows
+✅ Open vaults or private capsules — your choice
+
+---
+
+## 🌍 Build the Future of Collective Intelligence
+
+**Braintrust** is more than storage.
+It’s an ecosystem for the **intelligence economy** — a place where ideas have value, and foresight becomes currency.
+
+---
+
+## 🚧 Coming Soon
+
+- ✅ Public Marketplace
+- ✅ Capsule Indexing & Browsing
+- ✅ AI Plugin for Auto-Minting
+- ✅ DAO Curation Layer
+
+---
 
 ## Security
 
@@ -65,7 +87,8 @@ _Discord and Telegram support coming soon!_
 
 ## Community
 
-- Twitter: [@sternseesyou](https://twitter.com/sternseesyou)
+- Twitter: [@sternseesyou](https://x.com/Braintrustlabs)
+- Telegram (https://t.me/Braintrustlabs)
 - Discord: Coming soon
 - WhatsApp: Integration planned
 
@@ -75,8 +98,9 @@ MIT License - See [LICENSE](LICENSE) for details
 
 ---
 
-_"The obstacle to action advances action. What stands in the way becomes the way." - Marcus Aurelius_
+## ✨ Ready to Mint Your First Thought?
 
-For questions or issues, please check our [existing issues](https://github.com/yourusername/stern/issues) or open a new one.
+Join the waitlist and be the first to claim your mindspace on-chain.
 
-Visit [akrasia.ai/stern](https://akrasia.ai/stern) to learn more.
+👉 [Get Early Access](https://braintrustlabs.tech)
+
