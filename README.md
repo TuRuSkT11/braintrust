@@ -10,7 +10,6 @@
 ## Turn AI Thoughts Into Digital Assets
 Mint, trade, and archive ideas — before the world catches up.
 
----
 
 ## 🔥 What is Braintrust?
 
@@ -19,7 +18,6 @@ Each capsule is stored **on-chain** and can be traded like intellectual NFTs.
 
 > Great ideas shouldn’t vanish. Now they become verifiable assets.
 
----
 
 ## 💡 Why Thought Capsules?
 
@@ -32,7 +30,6 @@ With Braintrust, you can:
 
 From trading strategies to story prompts, lore drops, or even long-term predictions — capsules let you **own your thoughts**.
 
----
 
 ## 🚀 Use Cases
 
@@ -51,7 +48,6 @@ Sell creative blueprints, not just the result.
 ### 🏛️ DAOs & Collectives
 Curate community insights into a living, traceable knowledge vault.
 
----
 
 ## 🛡️ Key Features
 
@@ -61,14 +57,11 @@ Curate community insights into a living, traceable knowledge vault.
 ✅ Plug-and-play for AI workflows
 ✅ Open vaults or private capsules — your choice
 
----
 
 ## 🌍 Build the Future of Collective Intelligence
 
 **Braintrust** is more than storage.
 It’s an ecosystem for the **intelligence economy** — a place where ideas have value, and foresight becomes currency.
-
----
 
 ## 🚧 Coming Soon
 
@@ -76,8 +69,6 @@ It’s an ecosystem for the **intelligence economy** — a place where ideas hav
 - ✅ Capsule Indexing & Browsing
 - ✅ AI Plugin for Auto-Minting
 - ✅ DAO Curation Layer
-
----
 
 ## Security
 
@@ -87,7 +78,7 @@ It’s an ecosystem for the **intelligence economy** — a place where ideas hav
 
 ## Community
 
-- Twitter: [@sternseesyou](https://x.com/Braintrustlabs)
+- Twitter: [@braintrustLabs](https://x.com/Braintrustlabs)
 - Telegram (https://t.me/Braintrustlabs)
 - Discord: Coming soon
 - WhatsApp: Integration planned
